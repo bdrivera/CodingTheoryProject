@@ -1,6 +1,7 @@
 'use strict'
 
 let universalBitString = [];
+let errorFlag = false;
 
 /**
  * Returns the error detection capability of the given bit string
@@ -26,19 +27,17 @@ function errorCorrectionPossible(bitString) {
  * @param {*} unparsedBitString the raw user input.
  */
 function appendUniversalBitString (unparsedBitString) {
-    unparsedBitString.replace(/\s+/g, ''); //remove all white space from string
-    unparsedCharString = unparsedBitString.split(''); //split into character array
+    let unparsedCharArray = 
+        unparsedBitString.replace(/\s+/g, '').split(''); //remove all white space and split into character array
 
-    for(let i = 0; i < unparsedCharString.length; i++){
-        if(!unparsedCharString[i] == '0' || !unparsedCharString[i] == '1' || !unparsedCharString[i] == ',') {
-            
+    for(let i = 0; i < unparsedCharArray.length; i++){
+        if(!unparsedCharArray[i] == '0' || !unparsedCharArray[i] == '1' || !unparsedCharArray[i] == ',') {
+            giveUserError("Input invalid, please only provide bit strings seperated by commas, with or without spaces.");
+            return;
         }
     }
 
-    workingBitString = unparsedBitString.split(',');
-    for(let i = 0; i < workingBitString.length; i++) {
-        if(workingBitString[i].contains() )
-    }
+    universalBitString = unparsedBitString.split(','); //set universal as newly filtered and parsed array
 }
 
 /**
@@ -46,5 +45,6 @@ function appendUniversalBitString (unparsedBitString) {
  * @param {*} errorMessage the error message to display to the user.
  */
 function giveUserError(errorMessage) {
-
+    errorFlag = true;
+    //add code here for displaying error
 }
