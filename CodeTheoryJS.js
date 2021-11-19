@@ -8,9 +8,8 @@ let errorFlag = false;
  * @param {*} bitCodeArray the bit code to be used for calculations
  * @returns number of errors the bit code can detect
  */
-function getErrorDetectionPossible(bitCode) {
-    
-    return bitCode;
+function getErrorDetectionPossible(bitCodeArray) {
+    return (getMinimumDistance(bitCodeArray) - 1);
 }
 
 /**
@@ -19,7 +18,7 @@ function getErrorDetectionPossible(bitCode) {
  * @returns number of errors the bit code can detect
  */
 function getErrorCorrectionPossible(bitCodeArray) {
-    return bitCodeArray; //change later
+    return Math.floor(getErrorDetectionPossible(bitCodeArray)/2);
 }
 
 /**
@@ -29,10 +28,10 @@ function getErrorCorrectionPossible(bitCodeArray) {
  */
 function getMinimumDistance(bitCodeArray) {
     let minDistance = (bitCodeArray.length + 1);
-    for(let i = 0; i < bitCodeArray.length; i++) {
-        for(let j = i; i < bitCodeArray.length; i++) {
+    for(let i = 0; i < bitCodeArray.length; i++) { //start with this parent element...
+        for(let j = i; i < bitCodeArray.length; i++) { //compare parent element with each one after
             let hamD = getHammingDistance(bitCodeArray[i], bitCodeArray[j]);
-            if(hamD < minDistance) {
+            if(hamD < minDistance) { //if the current distance is greater than calculated, replace it.
                 minDistance = hamD;
             }
         }
@@ -52,7 +51,7 @@ function getHammingDistance(bitStringOne, bitStringTwo) {
     let bsOne = bitStringOne.split();
     let bsTwo = bitStringTwo.split();
     let distanceCount = 0;
-    for(let i = 0; i < bsOne.length; i++) {
+    for(let i = 0; i < bsOne.length; i++) { //iterate through the bits
         if(bsOne[i] != bsTwo[i]) {
             distanceCount++; 
         }
