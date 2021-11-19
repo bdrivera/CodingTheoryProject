@@ -1,7 +1,7 @@
 'use strict'
 
 let universalBitCode = [];
-let universalTestStringArray = [];
+let universalBitStringArray = [];
 let errorFlag = false;
 
 addButtonListeners();
@@ -64,7 +64,25 @@ function getHammingDistance(bitStringOne, bitStringTwo) {
 }
 
 /**
- * Used to take the user's form input, parse it into an array, and append that to the universal bit code array.
+ * Uses nearest neighbor method to determine corrections to bitstring using the universal bit codes.
+ * @param {*} bitString bit string to correct
+ * @returns most likely correction to the bit string
+ */
+function getCorrection(bitString) {
+    let minDistance = universalBitStringArray.length;
+    let mostLikelyCorrection = null;
+    for(let i = 0; i < universalBitCode.length; i++) {
+        let hamD = getHammingDistance(bitString, universalBitCode[i]);
+        if(minDistance > hamD) {
+            minDistance = hamD;
+            mostLikelyCorrection = universalBitCode[i];
+        }
+    }
+    return mostLikelyCorrection;
+}
+
+/**
+ * Used to take the user's bit code form input, parse it into an array, and append that to the universal bit code array.
  * This function will also catch user input errors.
  * @param {*} unparsedBitCode the raw user input.
  */
@@ -97,9 +115,14 @@ function appendUniversalBitCode(unparsedBitCode) {
     universalBitCode = lengthTestArray;
 }
 
+/**
+ * Used to take user's bit string form input, parse it into a bit array, and append that to the universal
+ * test string array
+ * @param {*} unparsedBitString raw user input
+ */
 function appendUniversalBitStringArray(unparsedBitString) {
     errorFlag = false;
-    let unparsedCharArray = 
+    let unparsedBitArray = 
         unparsedBitString.replace(/\s+/g, '').split(''); //remove all white space and split into character array
 
     if(unparsedBitString == "") {
@@ -107,19 +130,19 @@ function appendUniversalBitStringArray(unparsedBitString) {
         return;
     }
 
-    for(let i = 0; i < unparsedCharArray.length; i++){
-        if(unparsedCharArray[i] != "0" && unparsedCharArray[i] != "1") {
+    for(let i = 0; i < unparsedBitArray.length; i++){
+        if(unparsedBitArray[i] != "0" && unparsedBitArray[i] != "1") {
             displayUserError("Input invalid, please only provide bit strings.", 1);
             return;
         }
     }
 
-    if(unparsedCharArray.length != universalBitCode[0].length) {
+    if(unparsedBitArray.length != universalBitCode[0].length) {
         displayUserError("Your bit code is not the same size as your bit code elements. Please fix this and try again.", 1);
         console.log("input error 3");
     }
 
-    universalTestStringArray = unparsedCharArray;
+    universalBitStringArray = unparsedBitArray;
 }
 
 /**
@@ -131,7 +154,7 @@ function displayUserError(errorMessage, displayId) {
     if(displayId == 0) {
         $('#action_output_capabilities').innerHTML = errorMessage;
     } else if(displayId == 1) {
-        $('#action_output_procedure').innerHTML = errorMessage;
+        $('#action_output_correction').innerHTML = errorMessage;
     }
 }
 
@@ -139,13 +162,43 @@ function displayUserError(errorMessage, displayId) {
  * Formats and displays capability data for the universal bit code
  */
 function displayCapabilities() {
-    appendUniversalBitCode($('#codeInput').value);
-    if(!errorFlag) {
-        let message =
-            "Error Detection Capability: " + getErrorDetectionPossible(universalBitCode) + "<br/>" +
-            "Error Correction Capability: " + getErrorCorrectionPossible(universalBitCode);
-        displayMessageCapabilities(message);
+    appendUniversalBitCode($('#code_input').value);
+
+    if(errorFlag)
+        return;
+
+    let message =
+        "Error Detection Capability: " + getErrorDetectionPossible(universalBitCode) + "<br/>" +
+        "Error Correction Capability: " + getErrorCorrectionPossible(universalBitCode)
+        ;
+    displayMessageCapabilities(message);
+}
+
+/**
+ * Formats and displays correction data for the universals
+ */
+function displayCorrection() {
+    appendUniversalBitStringArray($('#test_code_input').value);
+    let correction = getCorrection(universalBitStringArray.join(""));
+
+    if(errorFlag)
+        return;
+
+    let message = "Error";
+    if(getErrorCorrectionPossible(universalBitCode) >=
+            getHammingDistance(universalBitStringArray.join(""), correction)) {
+        message =
+            "Errors found: " + getHammingDistance(universalBitStringArray.join(""), correction) + "<br/>" +
+            "Correction: " + correction
+        ;
+    } else {
+        message =
+            "Errors found: " + getHammingDistance(universalBitStringArray.join(""), correction) + ", too many errors to correct.<br/>" +
+            "Possible correction: " + correction
     }
+
+
+    displayMessageCorrection(message);
 }
 
 /**
@@ -160,8 +213,8 @@ function displayMessageCapabilities(message) {
  * Displays a message on the HTML for procedure section
  * @param {*} message message to display
  */
-function displayMessageProcedure(message) {
-    $('#action_output_procedure').innerHTML = message;
+function displayMessageCorrection(message) {
+    $('#action_output_correction').innerHTML = message;
 }
 
 /**
@@ -176,9 +229,9 @@ function addButtonListeners() {
                     displayCapabilities();
                 break;
     
-                case "fix_button":
+                case "correct_button":
                     displayCapabilities();
-                    //displayCorrection();
+                    displayCorrection();
                 break;
             }
         });
