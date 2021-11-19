@@ -5,27 +5,49 @@ let errorFlag = false;
 
 /**
  * Returns the error detection capability of the given bit code
- * @param {*} bitCode the bit code to be used for calculations
+ * @param {*} bitCodeArray the bit code to be used for calculations
  * @returns number of errors the bit code can detect
  */
-function errorDetectionPossible(bitCode) {
+function getErrorDetectionPossible(bitCode) {
     
     return bitCode;
 }
 
 /**
  * Returns the error correction capability of the given bit code
- * @param {*} bitCode the bit code to be used for calculations
+ * @param {*} bitCodeArray the bit code to be used for calculations
  * @returns number of errors the bit code can detect
  */
-function errorCorrectionPossible(bitCode) {
-    return bitCode //change later
+function getErrorCorrectionPossible(bitCodeArray) {
+    return bitCodeArray; //change later
 }
 
-function getMinimumDistance(bitCode) {
+/**
+ * Returns the minimum Hamming distance in a given bit code
+ * @param {*} bitCodeArray the bit code to be used for calculations
+ * @returns minimum Hamming Distance
+ */
+function getMinimumDistance(bitCodeArray) {
+    let minDistance = (bitCodeArray.length + 1);
+    for(let i = 0; i < bitCodeArray.length; i++) {
+        for(let j = i; i < bitCodeArray.length; i++) {
+            let hamD = getHammingDistance(bitCodeArray[i], bitCodeArray[j]);
+            if(hamD < minDistance) {
+                minDistance = hamD;
+            }
+        }
 
+    }
+
+    return minDistance;
 }
 
+/**
+ * Returns the Hamming distance between two given bit strings
+ * @param {*} bitStringOne first bit string to be compared
+ * @param {*} bitStringTwo second bit string to be compared
+ * @returns the Hamming distance between the two bit strings
+ */
 function getHammingDistance(bitStringOne, bitStringTwo) {
     let bsOne = bitStringOne.split();
     let bsTwo = bitStringTwo.split();
