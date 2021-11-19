@@ -1,10 +1,10 @@
 'use strict'
 
-let universalBitCode = [];
-let universalBitStringArray = [];
-let errorFlag = false;
+let universalBitCode = []; //parsed bitcode submitted by the user
+let universalBitStringArray = []; //parsed bitstring submitted by the user stored as an array of bits
+let errorFlag = false; //flag used to prevent progression should an error occur somewhere
 
-addButtonListeners();
+addButtonListeners(); //start the button listener...
 
 /**
  * Returns the error detection capability of the given bit code
@@ -50,12 +50,12 @@ function getMinimumDistance(bitCodeArray) {
  * @returns the Hamming distance between the two bit strings
  */
 function getHammingDistance(bitStringOne, bitStringTwo) {
-    let bsOne = bitStringOne.split("");
+    let bsOne = bitStringOne.split(""); //split the bitstrings into bit arrays...
     let bsTwo = bitStringTwo.split("");
     let distanceCount = 0;
     console.log("comparing: " + bitStringOne + " and " +bitStringTwo);
     for(let i = 0; i < bsOne.length; i++) { //iterate through the bits
-        if(bsOne[i] != bsTwo[i]) {
+        if(bsOne[i] != bsTwo[i]) { //if the bits are different, count it...
             distanceCount++; 
         }
     }
@@ -69,11 +69,11 @@ function getHammingDistance(bitStringOne, bitStringTwo) {
  * @returns most likely correction to the bit string
  */
 function getCorrection(bitString) {
-    let minDistance = universalBitStringArray.length;
-    let mostLikelyCorrection = null;
-    for(let i = 0; i < universalBitCode.length; i++) {
-        let hamD = getHammingDistance(bitString, universalBitCode[i]);
-        if(minDistance > hamD) {
+    let minDistance = universalBitStringArray.length; //start with highest possible value
+    let mostLikelyCorrection = null; //most likely correction storage
+    for(let i = 0; i < universalBitCode.length; i++) { //run through the universal bitcode...
+        let hamD = getHammingDistance(bitString, universalBitCode[i]); //get the distance with this iteration...
+        if(minDistance > hamD) { //if the Hamming distance is lower, this is the new most likely
             minDistance = hamD;
             mostLikelyCorrection = universalBitCode[i];
         }
@@ -87,16 +87,16 @@ function getCorrection(bitString) {
  * @param {*} unparsedBitCode the raw user input.
  */
 function appendUniversalBitCode(unparsedBitCode) {
-    errorFlag = false;
+    errorFlag = false; //reset the error flag, as this function will detect any new errors
     let unparsedCharArray = 
         unparsedBitCode.replace(/\s+/g, '').split(''); //remove all white space and split into character array
 
-    if(unparsedBitCode == "") {
+    if(unparsedBitCode == "") { //if the user leaves the field empty...
         displayUserError("Please Enter a bit code.", 0);
         return;
     }
 
-    for(let i = 0; i < unparsedCharArray.length; i++){
+    for(let i = 0; i < unparsedCharArray.length; i++){ //if the user uses invalid characters...
         if(unparsedCharArray[i] != "0" && unparsedCharArray[i] != "1" && unparsedCharArray[i] != ',') {
             displayUserError("Input invalid, please only provide bit strings seperated by commas, with or without spaces.", 0);
             return;
@@ -104,8 +104,8 @@ function appendUniversalBitCode(unparsedBitCode) {
     }
     let lengthTestArray = unparsedBitCode.replace(/\s+/g, '').split(','); //set universal as newly filtered and parsed array
     let testLength = lengthTestArray[0].length;
-    console.log(lengthTestArray); //debug
-    for(let i = 1; i < lengthTestArray.length; i++) {
+
+    for(let i = 1; i < lengthTestArray.length; i++) { //if the user provides bitstrings of varying lengths...
         if(lengthTestArray[i].length != testLength) {
             displayUserError("Your bit code at index " + (i + 1) + " is not the same length as the rest of the " +
             "bit code. Please fix this and try again", 0);
@@ -121,23 +121,22 @@ function appendUniversalBitCode(unparsedBitCode) {
  * @param {*} unparsedBitString raw user input
  */
 function appendUniversalBitStringArray(unparsedBitString) {
-    errorFlag = false;
     let unparsedBitArray = 
         unparsedBitString.replace(/\s+/g, '').split(''); //remove all white space and split into character array
 
-    if(unparsedBitString == "") {
+    if(unparsedBitString == "") { //if the user leaves the field empty...
         displayUserError("Please Enter a bit string.", 1);
         return;
     }
 
-    for(let i = 0; i < unparsedBitArray.length; i++){
+    for(let i = 0; i < unparsedBitArray.length; i++){ //if the user uses invalid characters...
         if(unparsedBitArray[i] != "0" && unparsedBitArray[i] != "1") {
             displayUserError("Input invalid, please only provide bit strings.", 1);
             return;
         }
     }
 
-    if(unparsedBitArray.length != universalBitCode[0].length) {
+    if(unparsedBitArray.length != universalBitCode[0].length) { //if the user provides a bitstring of different length from bitcode...
         displayUserError("Your bit code is not the same size as your bit code elements. Please fix this and try again.", 1);
         console.log("input error 3");
     }
@@ -148,12 +147,13 @@ function appendUniversalBitStringArray(unparsedBitString) {
 /**
  * Function used to display an error to the user, typical for user input errors.
  * @param {*} errorMessage the error message to display to the user.
+ * @param {*} errorId id for the error, 0 is capability logic error, 1 is a correction logic error
  */
-function displayUserError(errorMessage, displayId) {
+function displayUserError(errorMessage, errorId) {
     errorFlag = true;
-    if(displayId == 0) {
+    if(errorId == 0) { //capability logic error
         $('#action_output_capabilities').innerHTML = errorMessage;
-    } else if(displayId == 1) {
+    } else if(errorId == 1) { //correction logic error
         $('#action_output_correction').innerHTML = errorMessage;
     }
 }
@@ -162,9 +162,9 @@ function displayUserError(errorMessage, displayId) {
  * Formats and displays capability data for the universal bit code
  */
 function displayCapabilities() {
-    appendUniversalBitCode($('#code_input').value);
+    appendUniversalBitCode($('#code_input').value); //parse the user's input data from HTML form
 
-    if(errorFlag)
+    if(errorFlag) //stop if there is an error...
         return;
 
     let message =
@@ -178,20 +178,20 @@ function displayCapabilities() {
  * Formats and displays correction data for the universals
  */
 function displayCorrection() {
-    appendUniversalBitStringArray($('#test_code_input').value);
-    let correction = getCorrection(universalBitStringArray.join(""));
+    appendUniversalBitStringArray($('#test_code_input').value); //parse the user's input data from HTML form
+    let correction = getCorrection(universalBitStringArray.join("")); //store the likely correction for later
 
-    if(errorFlag)
+    if(errorFlag) //stop if there is an error...
         return;
 
-    let message = "Error";
+    let message = "Error"; //Establish the variable to prevent null pointers and unforseen circumstances
     if(getErrorCorrectionPossible(universalBitCode) >=
-            getHammingDistance(universalBitStringArray.join(""), correction)) {
+            getHammingDistance(universalBitStringArray.join(""), correction)) { //If the error can be corrected...
         message =
             "Errors found: " + getHammingDistance(universalBitStringArray.join(""), correction) + "<br/>" +
             "Correction: " + correction
         ;
-    } else {
+    } else { //if there are too many errors to correct
         message =
             "Errors found: " + getHammingDistance(universalBitStringArray.join(""), correction) + ", too many errors to correct.<br/>" +
             "Possible correction: " + correction
@@ -225,12 +225,12 @@ function addButtonListeners() {
     btns.forEach((button) => {
         button.addEventListener('click', (e) => {
             switch(e.target.id) {
-                case "capabilities_button":
+                case "capabilities_button": //update capabilities information display
                     displayCapabilities();
                 break;
     
-                case "correct_button":
-                    displayCapabilities();
+                case "correct_button": //update correction information display
+                    displayCapabilities(); //also rerun capabilities in-case the user changed the bitcode
                     displayCorrection();
                 break;
             }
