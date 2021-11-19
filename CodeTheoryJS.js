@@ -3,6 +3,8 @@
 let universalBitCode = [];
 let errorFlag = false;
 
+addButtonListeners();
+
 /**
  * Returns the error detection capability of the given bit code
  * @param {*} bitCodeArray the bit code to be used for calculations
@@ -97,7 +99,7 @@ function displayUserError(errorMessage) {
 }
 
 function displayUserMessage(messageToDisplay) {
-    $("action_output").innerHTML = messageToDisplay;
+    $('#action_output').innerHTML = messageToDisplay;
 }
 
 /**
@@ -106,24 +108,17 @@ function displayUserMessage(messageToDisplay) {
 function addButtonListeners() {
     const btns = document.querySelectorAll('button');
     btns.forEach((button) => {
-        addButtonEventListener(button);
-    });
-}
-
-/**
- * Individual button event listeners
- * @param {*} button Button having an event acted upon
- */
-function addButtonEventListener(button) {
-    button.AddEventListener('click', (e) => {
-        switch(e.target.id) {
-            case "updateCapabilites":
-                displayUserMessage("test");
-            break;
-
-            case "performErrorProcedure":
-            break;
-        }
+        button.addEventListener('click', (e) => {
+            console.log("button pressed");
+            switch(e.target.id) {
+                case "updateCapabilities":
+                    displayUserMessage("test");
+                break;
+    
+                case "performErrorProcedure":
+                break;
+            }
+        });
     });
 }
 
