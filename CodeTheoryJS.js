@@ -91,7 +91,18 @@ function appendUniversalBitCode (unparsedBitCode) {
  * Function used to display an error to the user, typical for user input errors.
  * @param {*} errorMessage the error message to display to the user.
  */
-function giveUserError(errorMessage) {
+function displayUserError(errorMessage) {
     errorFlag = true;
-    //add code here for displaying error
+    //add code here for displaying error *****************
 }
+
+function displayUserMessage(messageToDisplay) {
+
+}
+
+/**
+ * Function that queries and returns the element.
+ * @param {*} n element to query
+ * @returns queried element
+ */
+function $(n) { return document.querySelector(n); }
