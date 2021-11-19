@@ -1,6 +1,7 @@
 'use strict'
 
 let universalBitCode = [];
+let universalTestStringArray = [];
 let errorFlag = false;
 
 addButtonListeners();
@@ -29,17 +30,16 @@ function getErrorCorrectionPossible(bitCodeArray) {
  * @returns minimum Hamming Distance
  */
 function getMinimumDistance(bitCodeArray) {
-    let minDistance = (bitCodeArray.length + 1);
-    for(let i = 0; i < bitCodeArray.length; i++) { //start with this parent element...
-        for(let j = i; i < bitCodeArray.length; i++) { //compare parent element with each one after
-            let hamD = getHammingDistance(bitCodeArray[i], bitCodeArray[j]);
-            if(hamD < minDistance) { //if the current distance is greater than calculated, replace it.
-                minDistance = hamD;
+    let minDistance = bitCodeArray[0].length;
+    for(let i = 0; i < bitCodeArray.length-1; i++) { //start with this parent element...
+        for(let j = (i+1); j < bitCodeArray.length; j++) { //compare parent element with each one after
+            let hamDistance = getHammingDistance(bitCodeArray[i], bitCodeArray[j]);
+            if(minDistance > hamDistance) { //if the current distance is greater than calculated, replace it.
+                minDistance = hamDistance;
             }
         }
 
     }
-
     return minDistance;
 }
 
@@ -50,14 +50,16 @@ function getMinimumDistance(bitCodeArray) {
  * @returns the Hamming distance between the two bit strings
  */
 function getHammingDistance(bitStringOne, bitStringTwo) {
-    let bsOne = bitStringOne.split();
-    let bsTwo = bitStringTwo.split();
+    let bsOne = bitStringOne.split("");
+    let bsTwo = bitStringTwo.split("");
     let distanceCount = 0;
+    console.log("comparing: " + bitStringOne + " and " +bitStringTwo);
     for(let i = 0; i < bsOne.length; i++) { //iterate through the bits
         if(bsOne[i] != bsTwo[i]) {
             distanceCount++; 
         }
     }
+    console.log("Hamming Distance: " + distanceCount);
     return distanceCount;
 }
 
@@ -66,7 +68,7 @@ function getHammingDistance(bitStringOne, bitStringTwo) {
  * This function will also catch user input errors.
  * @param {*} unparsedBitCode the raw user input.
  */
-function appendUniversalBitCode (unparsedBitCode) {
+function appendUniversalBitCode(unparsedBitCode) {
     errorFlag = false;
     let unparsedCharArray = 
         unparsedBitCode.replace(/\s+/g, '').split(''); //remove all white space and split into character array
@@ -84,12 +86,12 @@ function appendUniversalBitCode (unparsedBitCode) {
             return;
         }
     }
-    let lengthTestArray = unparsedBitCode.split(','); //set universal as newly filtered and parsed array
+    let lengthTestArray = unparsedBitCode.replace(/\s+/g, '').split(','); //set universal as newly filtered and parsed array
     let testLength = lengthTestArray[0].length;
     console.log(lengthTestArray); //debug
     for(let i = 1; i < lengthTestArray.length; i++) {
         if(lengthTestArray[i].length != testLength) {
-            displayUserError("Your bit code at index " + (testLength) + " is not the same length as the rest of the " +
+            displayUserError("Your bit code at index " + (i + 1) + " is not the same length as the rest of the " +
             "bit code. Please fix this and try again");
             console.log("input error 3");
         }
@@ -99,26 +101,53 @@ function appendUniversalBitCode (unparsedBitCode) {
 
 }
 
+function appendUniversalBitStringArray(unparsedBitCode) {
+
+}
+
 /**
  * Function used to display an error to the user, typical for user input errors.
  * @param {*} errorMessage the error message to display to the user.
  */
-function displayUserError(errorMessage) {
+function displayUserError(errorMessage, displayId) {
     errorFlag = true;
-    $('#action_output').innerHTML = errorMessage;
+    if(displayId == 0)
+        $('#action_output_capabilities').innerHTML = errorMessage;
+    else if(displayId == 1)
+        $('#action_output_procedure').innerHTML = errorMessage;
 }
 
+/**
+ * Formats and displays capability data for the universal bit code
+ */
 function displayCapabilities() {
     appendUniversalBitCode($('#codeInput').value);
     if(!errorFlag) {
         let message =
-            "Error Detection Capability: <br>" + getErrorCorrectionPossible(universalBitCode) +
-            + "Error Correction Capability: " + getErrorDetectionPossible(universalBitCode);
+            "Error Detection Capability: " + getErrorDetectionPossible(universalBitCode) + "<br/>" +
+            "Error Correction Capability: " + getErrorCorrectionPossible(universalBitCode);
+        displayMessageCapabilities(message);
     }
 }
 
 /**
- * Constant button listeners
+ * Displays a message on the HTML for capability section
+ * @param {*} message message to display
+ */
+function displayMessageCapabilities(message) {
+    $('#action_output_capabilities').innerHTML = message;
+}
+
+/**
+ * Displays a message on the HTML for procedure section
+ * @param {*} message message to display
+ */
+function displayMessageProcedure(message) {
+    $('#action_output_procedure').innerHTML = message;
+}
+
+/**
+ * Adds button listeners for HTML buttons and directs calls
  */
 function addButtonListeners() {
     const btns = document.querySelectorAll('button');

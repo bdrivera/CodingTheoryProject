@@ -19,12 +19,20 @@
         </h4>
         <div class="action_area"> <!-- Where the User will give input and receive feedback-->
             <div class="action_input">
-                <input id="codeInput" type="text" value=""/>
+                Binary Code Set: <input id="codeInput" type="text" value="" style="width: 50%"/>
                 <button id="updateCapabilities">Capabilties</button>
+                <div id="action_output_capabilities"> <!--This class will be manipulated by javascript to display results-->
+                    Output will be displayed here.
+                    <br/>
+                </div>
+                <br/>
+
+                Test Binary: <input id="testCodeInput" type="text" value=""/>
                 <button id="performErrorProcedure">Detect and Fix</button>
-            </div>
-            <div id="action_output"> <!--This class will be manipulated by javascript to display results-->
-                Output will be displayed here.
+                <br/>
+                <div id="action_output_procedure"> <!--This class will be manipulated by javascript to display results-->
+                    Output will be displayed here.
+                </div>
             </div>
         </div>
 
