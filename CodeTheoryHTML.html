@@ -6,19 +6,27 @@
     </head>
 
     <body>
+        <!--Top of page Banners [START]-->
         <h1 id="banner">
             Code Theory
         </h1>
         <h3 id="sub_banner">
-            Author: Bret Rivera
+            Author: Bret Rivera <br/>
+            CIS-1166-005
         </h3>
+        <!--Top of page Banners [END]-->
 
+        <!--Top of page Instructions [START]-->
         <h4 id="instructions">
             Enter binary code here, seperated by commas with or without spaces, to be given
             error detection and correction capabilities. It can also detect and correct errors.
         </h4>
-        <div class="action_area"> <!-- Where the User will give input and receive feedback-->
+        <!--Top of page Instructions [END]-->
+
+        <!--User interation elements [START]-->
+        <div class="action_area">
             <div class="action_input">
+                <!--Capabilities elements [START]-->
                 Bit Code Set: <input id="code_input" type="text" value="" style="width: 50%"/>
                 <button id="capabilities_button">Capabilties</button>
                 <div id="action_output_capabilities"> <!--This class will be manipulated by javascript to display results-->
@@ -26,15 +34,19 @@
                     <br/>
                 </div>
                 <br/>
+                <!--Capabilities elements [END]-->
 
+                <!--Correection elements [START]-->
                 Test Binary: <input id="test_code_input" type="text" value=""/>
                 <button id="correct_button">Detect and Correct</button>
                 <br/>
                 <div id="action_output_correction"> <!--This class will be manipulated by javascript to display results-->
                     Output will be displayed here.
                 </div>
+                <!--Correction elements [END]-->
             </div>
         </div>
+        <!--User interation elements [END]-->
 
     </body>
 
