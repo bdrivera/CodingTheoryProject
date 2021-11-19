@@ -97,7 +97,34 @@ function displayUserError(errorMessage) {
 }
 
 function displayUserMessage(messageToDisplay) {
+    $("action_output").innerHTML = messageToDisplay;
+}
 
+/**
+ * Constant button listeners
+ */
+function addButtonListeners() {
+    const btns = document.querySelectorAll('button');
+    btns.forEach((button) => {
+        addButtonEventListener(button);
+    });
+}
+
+/**
+ * Individual button event listeners
+ * @param {*} button Button having an event acted upon
+ */
+function addButtonEventListener(button) {
+    button.AddEventListener('click', (e) => {
+        switch(e.target.id) {
+            case "updateCapabilites":
+                displayUserMessage("test");
+            break;
+
+            case "performErrorProcedure":
+            break;
+        }
+    });
 }
 
 /**
