@@ -1,34 +1,51 @@
 'use strict'
 
-let universalBitString = [];
+let universalBitCode = [];
 let errorFlag = false;
 
 /**
- * Returns the error detection capability of the given bit string
- * @param {*} bitString the bit string to be used for calculations
- * @returns number of errors the bit string can detect
+ * Returns the error detection capability of the given bit code
+ * @param {*} bitCode the bit code to be used for calculations
+ * @returns number of errors the bit code can detect
  */
-function errorDetectionPossible(bitString) {
-    return bitString; //change later
+function errorDetectionPossible(bitCode) {
+    
+    return bitCode;
 }
 
 /**
- * Returns the error correction capability of the given bit string
- * @param {*} bitString the bit string to be used for calculations
- * @returns number of errors the bit string can detect
+ * Returns the error correction capability of the given bit code
+ * @param {*} bitCode the bit code to be used for calculations
+ * @returns number of errors the bit code can detect
  */
-function errorCorrectionPossible(bitString) {
-    return bitString; //change later
+function errorCorrectionPossible(bitCode) {
+    return bitCode //change later
+}
+
+function getMinimumDistance(bitCode) {
+
+}
+
+function getHammingDistance(bitStringOne, bitStringTwo) {
+    let bsOne = bitStringOne.split();
+    let bsTwo = bitStringTwo.split();
+    let distanceCount = 0;
+    for(let i = 0; i < bsOne.length; i++) {
+        if(bsOne[i] != bsTwo[i]) {
+            distanceCount++; 
+        }
+    }
+    return distanceCount;
 }
 
 /**
- * Used to take the user's form input, parse it into an array, and append that to the universal bit string array.
+ * Used to take the user's form input, parse it into an array, and append that to the universal bit code array.
  * This function will also catch user input errors.
- * @param {*} unparsedBitString the raw user input.
+ * @param {*} unparsedBitCode the raw user input.
  */
-function appendUniversalBitString (unparsedBitString) {
+function appendUniversalBitCode (unparsedBitCode) {
     let unparsedCharArray = 
-        unparsedBitString.replace(/\s+/g, '').split(''); //remove all white space and split into character array
+        unparsedBitCode.replace(/\s+/g, '').split(''); //remove all white space and split into character array
 
     for(let i = 0; i < unparsedCharArray.length; i++){
         if(!unparsedCharArray[i] == '0' || !unparsedCharArray[i] == '1' || !unparsedCharArray[i] == ',') {
@@ -36,8 +53,17 @@ function appendUniversalBitString (unparsedBitString) {
             return;
         }
     }
+    let lengthTestArray = unparsedBitCode.split(','); //set universal as newly filtered and parsed array
+    let testLength = lengthTestArray[0].length;
+    for(i = 1; i < lengthTestArray.length; i++) {
+        if(lengthTestArray[i] != testLength) {
+            giveUserError("Your bit code at index " + (testLength + 1) + " is not the same length as the rest of the " +
+            "bit code. Please fix this and try again");
+        }
+    }
 
-    universalBitString = unparsedBitString.split(','); //set universal as newly filtered and parsed array
+    universalBitCode = lengthTestArray;
+
 }
 
 /**

@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>Code Theory</title>
-        <link rel="stylesheet" type="text/css" href="CodeTheoryCSS.css"
+        <link rel="stylesheet" type="text/css" href="CodeTheoryCSS.css">
     </head>
 
     <body>
@@ -18,10 +18,16 @@
             error detection and correction capabilities. It can also detect and correct errors.
         </h4>
         <div class="action_area"> <!-- Where the User will give input and receive feedback-->
-            <input id="codeInput" type="text" value=""/>
-            <button id="updateCapabilities">Capabilties</button>
-            <button id="performErrorProcedure">Detect and Fix</button>
+            <div class="action_input">
+                <input id="codeInput" type="text" value=""/>
+                <button id="updateCapabilities">Capabilties</button>
+                <button id="performErrorProcedure">Detect and Fix</button>
+            </div>
+            <div class="action_output"> <!--This class will be manipulated by javascript to display results-->
+                
+            </div>
         </div>
+
     </body>
 
     <script type="text/javascript" src="CodeTheoryJS.js"></script>
