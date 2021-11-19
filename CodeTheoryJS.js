@@ -67,21 +67,31 @@ function getHammingDistance(bitStringOne, bitStringTwo) {
  * @param {*} unparsedBitCode the raw user input.
  */
 function appendUniversalBitCode (unparsedBitCode) {
+    errorFlag = false;
     let unparsedCharArray = 
         unparsedBitCode.replace(/\s+/g, '').split(''); //remove all white space and split into character array
 
+    if(unparsedBitCode == "") {
+        displayUserError("Please Enter a bit code.");
+        console.log("input error 1");
+        return;
+    }
+
     for(let i = 0; i < unparsedCharArray.length; i++){
-        if(!unparsedCharArray[i] == '0' || !unparsedCharArray[i] == '1' || !unparsedCharArray[i] == ',') {
-            giveUserError("Input invalid, please only provide bit strings seperated by commas, with or without spaces.");
+        if(unparsedCharArray[i] != "0" && unparsedCharArray[i] != "1" && unparsedCharArray[i] != ',') {
+            displayUserError("Input invalid, please only provide bit strings seperated by commas, with or without spaces.");
+            console.log("input error 2: character " + unparsedCharArray[i]); //debug
             return;
         }
     }
     let lengthTestArray = unparsedBitCode.split(','); //set universal as newly filtered and parsed array
     let testLength = lengthTestArray[0].length;
-    for(i = 1; i < lengthTestArray.length; i++) {
-        if(lengthTestArray[i] != testLength) {
-            giveUserError("Your bit code at index " + (testLength + 1) + " is not the same length as the rest of the " +
+    console.log(lengthTestArray); //debug
+    for(let i = 1; i < lengthTestArray.length; i++) {
+        if(lengthTestArray[i].length != testLength) {
+            displayUserError("Your bit code at index " + (testLength) + " is not the same length as the rest of the " +
             "bit code. Please fix this and try again");
+            console.log("input error 3");
         }
     }
 
@@ -95,11 +105,16 @@ function appendUniversalBitCode (unparsedBitCode) {
  */
 function displayUserError(errorMessage) {
     errorFlag = true;
-    //add code here for displaying error *****************
+    $('#action_output').innerHTML = errorMessage;
 }
 
-function displayUserMessage(messageToDisplay) {
-    $('#action_output').innerHTML = messageToDisplay;
+function displayCapabilities() {
+    appendUniversalBitCode($('#codeInput').value);
+    if(!errorFlag) {
+        let message =
+            "Error Detection Capability: <br>" + getErrorCorrectionPossible(universalBitCode) +
+            + "Error Correction Capability: " + getErrorDetectionPossible(universalBitCode);
+    }
 }
 
 /**
@@ -109,10 +124,9 @@ function addButtonListeners() {
     const btns = document.querySelectorAll('button');
     btns.forEach((button) => {
         button.addEventListener('click', (e) => {
-            console.log("button pressed");
             switch(e.target.id) {
                 case "updateCapabilities":
-                    displayUserMessage("test");
+                    displayCapabilities();
                 break;
     
                 case "performErrorProcedure":
