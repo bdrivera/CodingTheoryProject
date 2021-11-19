@@ -74,15 +74,13 @@ function appendUniversalBitCode(unparsedBitCode) {
         unparsedBitCode.replace(/\s+/g, '').split(''); //remove all white space and split into character array
 
     if(unparsedBitCode == "") {
-        displayUserError("Please Enter a bit code.");
-        console.log("input error 1");
+        displayUserError("Please Enter a bit code.", 0);
         return;
     }
 
     for(let i = 0; i < unparsedCharArray.length; i++){
         if(unparsedCharArray[i] != "0" && unparsedCharArray[i] != "1" && unparsedCharArray[i] != ',') {
-            displayUserError("Input invalid, please only provide bit strings seperated by commas, with or without spaces.");
-            console.log("input error 2: character " + unparsedCharArray[i]); //debug
+            displayUserError("Input invalid, please only provide bit strings seperated by commas, with or without spaces.", 0);
             return;
         }
     }
@@ -92,17 +90,36 @@ function appendUniversalBitCode(unparsedBitCode) {
     for(let i = 1; i < lengthTestArray.length; i++) {
         if(lengthTestArray[i].length != testLength) {
             displayUserError("Your bit code at index " + (i + 1) + " is not the same length as the rest of the " +
-            "bit code. Please fix this and try again");
-            console.log("input error 3");
+            "bit code. Please fix this and try again", 0);
         }
     }
 
     universalBitCode = lengthTestArray;
-
 }
 
-function appendUniversalBitStringArray(unparsedBitCode) {
+function appendUniversalBitStringArray(unparsedBitString) {
+    errorFlag = false;
+    let unparsedCharArray = 
+        unparsedBitString.replace(/\s+/g, '').split(''); //remove all white space and split into character array
 
+    if(unparsedBitString == "") {
+        displayUserError("Please Enter a bit string.", 1);
+        return;
+    }
+
+    for(let i = 0; i < unparsedCharArray.length; i++){
+        if(unparsedCharArray[i] != "0" && unparsedCharArray[i] != "1") {
+            displayUserError("Input invalid, please only provide bit strings.", 1);
+            return;
+        }
+    }
+
+    if(unparsedCharArray.length != universalBitCode[0].length) {
+        displayUserError("Your bit code is not the same size as your bit code elements. Please fix this and try again.", 1);
+        console.log("input error 3");
+    }
+
+    universalTestStringArray = unparsedCharArray;
 }
 
 /**
@@ -111,10 +128,11 @@ function appendUniversalBitStringArray(unparsedBitCode) {
  */
 function displayUserError(errorMessage, displayId) {
     errorFlag = true;
-    if(displayId == 0)
+    if(displayId == 0) {
         $('#action_output_capabilities').innerHTML = errorMessage;
-    else if(displayId == 1)
+    } else if(displayId == 1) {
         $('#action_output_procedure').innerHTML = errorMessage;
+    }
 }
 
 /**
@@ -154,11 +172,13 @@ function addButtonListeners() {
     btns.forEach((button) => {
         button.addEventListener('click', (e) => {
             switch(e.target.id) {
-                case "updateCapabilities":
+                case "capabilities_button":
                     displayCapabilities();
                 break;
     
-                case "performErrorProcedure":
+                case "fix_button":
+                    displayCapabilities();
+                    //displayCorrection();
                 break;
             }
         });
